@@ -16,13 +16,14 @@ class Server{
 
     middlewares(){
          //cors
+         this.app.use(express.static('public')); //! prioridad
          this.app.use(cors());
 
         //lectura y pasrseao del body toda la informacion que bien la parsea a json
         this.app.use(express.json());
 
         //paralabra clase para indicar que es un middleware
-        this.app.use(express.static('public')); //! prioridad
+ 
        
     }
 
