@@ -5,7 +5,7 @@ const { usuariosGet,
     usuariosPut,
     usuariosPatch,
     usuariosDelete } = require('../controllers/usuarios');
-const { esRoleValido, emailExiste } = require('../helpers/db-validators');
+const { esRoleValido, emailExiste, existeUsuarioPorId } = require('../helpers/db-validators');
 const { validarCampos } = require('../middlewares/validar-campos');
 
 const router = Router(); //a el se le configura las rutas 
@@ -22,12 +22,23 @@ router.post('/',[
     check('rol').custom(esRoleValido),
     validarCampos
     ], usuariosPost)
+
+
 //recibir del header, params
-router.put('/:id', usuariosPut)
+router.put('/:id', [
+    check('id', 'No es un id Valido').isMongoId(),
+    check('id').custom(existeUsuarioPorId),
+    check('rol').custom(esRoleValido),
+    validarCampos //cuidate con la validacion de campos, para que continue a la ruta 
+], usuariosPut)
 
 router.patch('/', usuariosPatch)
 //queryparams
-router.delete('/', usuariosDelete)
+router.delete('/:id', [
+    check('id', 'No es un id Valido').isMongoId(),
+    check('id').custom(existeUsuarioPorId),
+    validarCampos //cuidate con la validacion de campos, para que continue a la ruta 
+],usuariosDelete)
 
 //! los mensajes de errores son para decirle que hizo algo mal el front
 router.put('/', (req, res) => {

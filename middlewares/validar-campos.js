@@ -7,7 +7,7 @@ const validarCampos =  (req = request, res = response, next) => {
         return res.status(400).json(errors);
     }
 
-    next();//sigue con el siguiente middleware -> si no aejecuta el componente controlador 
+    next();//sigue con el siguiente middleware -> si no aejecuta el componente controlador
 }
 
 module.exports = {

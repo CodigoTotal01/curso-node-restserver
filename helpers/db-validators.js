@@ -17,7 +17,22 @@ const emailExiste = async(correo = '') => {
         throw new Error(`El correo: ${correo} ya esta registrado`); // error personalizado para  que no rebiente
     }
 }
+
+
+
+const  existeUsuarioPorId  = async(id) => {
+    const existeUsuario = await Usuario.findById(id);
+
+    if(!existeUsuario){
+        throw new Error(`El id: ${id} ya esta registrado`); // error personalizado para  que no rebiente
+    }
+}
+
 module.exports ={
     esRoleValido,
-    emailExiste
+    emailExiste,
+    existeUsuarioPorId
 }
+
+
+
