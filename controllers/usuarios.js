@@ -47,10 +47,19 @@ const usuariosDelete = async(req, res) => {
     const {id}=req.params
     //created 201
 
+    //!pasado desde un middleware atravez del req
+    //const uid = req.uid;
+
+    const usuarioAutenticado = req.usuario;
+    ///pero lo que nos interesa es el rol 
+
     //borrado fisico 
     const usuario = await Usuario.findByIdAndUpdate(id, {estado:false}); //recuerda que SI existe en este punto el usuario
+    
     res.status(201).json({
-        id
+        usuarioAutenticado,
+        usuario
+        
     })
 }
 

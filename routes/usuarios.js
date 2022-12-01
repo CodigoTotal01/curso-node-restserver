@@ -6,7 +6,9 @@ const { usuariosGet,
     usuariosPatch,
     usuariosDelete } = require('../controllers/usuarios');
 const { esRoleValido, emailExiste, existeUsuarioPorId } = require('../helpers/db-validators');
-const { validarCampos } = require('../middlewares/validar-campos');
+
+
+const {validarCampos, validarJWT, esAdminRole, tieneRole} = require('../middlewares')
 
 const router = Router(); //a el se le configura las rutas 
 //el segundo argumento es un middleware _> son funciones que se ejecutan antesque un controlador
@@ -34,19 +36,15 @@ router.put('/:id', [
 
 router.patch('/', usuariosPatch)
 //queryparams
-router.delete('/:id', [
+router.delete('/:id', [ //es secuencial 
+    validarJWT,
+    esAdminRole,
+    tieneRole('ADMIN_ROLE', 'VENTAS_ROLE'),
     check('id', 'No es un id Valido').isMongoId(),
     check('id').custom(existeUsuarioPorId),
     validarCampos //cuidate con la validacion de campos, para que continue a la ruta 
 ],usuariosDelete)
 
-//! los mensajes de errores son para decirle que hizo algo mal el front
-router.put('/', (req, res) => {
-    //bad request
-    res.status(400).json({//usarlo cuanod no nos envia n una informacion 
-        nombre: 'Palacios'
-    })
-})
 
 
 module.exports = router; //que raro que se deba exportar pero ahi va 

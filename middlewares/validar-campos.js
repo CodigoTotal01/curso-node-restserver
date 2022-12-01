@@ -10,6 +10,9 @@ const validarCampos =  (req = request, res = response, next) => {
     next();//sigue con el siguiente middleware -> si no aejecuta el componente controlador
 }
 
+
+
+
 module.exports = {
     validarCampos
 }

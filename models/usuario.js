@@ -36,10 +36,10 @@ const UsuarioSchema = Schema({
 });
 //se exporta usando la funcion del modelo > emplea el squema y le seteara el nombre de la tabla (coleccion)
 
-
-UsuarioSchema.methods.toJson = function(){ //! No funciona ->  cuanod se mande a llamar
-
-    const {__v, password, ...usuario} = this.toObject();
-    return usuario;
+UsuarioSchema.methods.toJSON = function() {
+    const { __v, password, _id, ...usuario  } = this.toObject();
+    usuario.uid = _id; //setear el valor visual
+    return usuario; // lo que se retorne en cada operacion de busqueda con monggose 
 }
+
 module.exports = model('Usuario', UsuarioSchema); //* automaticamente le pone en plural 

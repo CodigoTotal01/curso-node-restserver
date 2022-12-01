@@ -21,6 +21,7 @@ const emailExiste = async(correo = '') => {
 
 
 const  existeUsuarioPorId  = async(id) => {
+    //aprendi a que puede saltar cualquier tpo de error 
     const existeUsuario = await Usuario.findById(id);
 
     if(!existeUsuario){
