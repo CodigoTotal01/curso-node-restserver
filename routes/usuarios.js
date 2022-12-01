@@ -1,16 +1,27 @@
-const {Router} = require('express'); //isntacncia de rutas
-
+const { Router } = require('express'); //isntacncia de rutas
+const { check } = require('express-validator')
 const { usuariosGet,
-        usuariosPost, 
-        usuariosPut, 
-        usuariosPatch, 
-        usuariosDelete } = require('../controllers/usuarios');
+    usuariosPost,
+    usuariosPut,
+    usuariosPatch,
+    usuariosDelete } = require('../controllers/usuarios');
+const { esRoleValido, emailExiste } = require('../helpers/db-validators');
+const { validarCampos } = require('../middlewares/validar-campos');
 
 const router = Router(); //a el se le configura las rutas 
-
+//el segundo argumento es un middleware _> son funciones que se ejecutan antesque un controlador
 router.get('/', usuariosGet)
 
-router.post('/', usuariosPost)
+//se supone que estos midleware estas biendo dotodo lo que venga en el body
+router.post('/',[
+    check('nombre', 'El nombre es obligatorio').not().isEmpty(),
+    check('password', 'El password debe ser mayor a 6 letras').isLength({min:6}),
+    check('correo', 'El correo no es valido').isEmail(),
+    check('correo').custom(emailExiste),
+    //check('rol', 'No es un rol valido').isIn(['ADMIN_ROL', 'USER_ROL']),//* o uno o el otro nadamas
+    check('rol').custom(esRoleValido),
+    validarCampos
+    ], usuariosPost)
 //recibir del header, params
 router.put('/:id', usuariosPut)
 
