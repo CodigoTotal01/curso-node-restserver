@@ -4,7 +4,7 @@ const { response } = require("express")
 
 const esAdminRole = (req, res = response, next) => {
     //req intuyoque es un objeto que se le puede añadir informacion y pasr ingo de igual forma 
-
+    console.log("I have a time ");
 
     if (!req.usuario) {
         return res.status(500).json({
