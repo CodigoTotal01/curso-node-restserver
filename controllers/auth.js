@@ -1,23 +1,23 @@
-const { response } = require("express");
+const {response} = require("express");
 const Usuario = require('../models/usuario') // entity > mongoose
 const bcryptjs = require('bcryptjs');
-const { generarJWT } = require("../helpers/generar-jwt");
+const {generarJWT} = require("../helpers/generar-jwt");
 
 //modelo 
-const login = async(req, res = response) => {
-    const { correo, password } = req.body;
+const login = async (req, res = response) => {
+    const {correo, password} = req.body;
     try {
 
-        
+
         //verificar si el email existe 
-        const usuario= await Usuario.findOne({correo});
-        if(!usuario){
+        const usuario = await Usuario.findOne({correo});
+        if (!usuario) {
             return res.status(400).json({
                 msg: "Usuarios / Password son incorrectos"
             })
         }
         //Si el usuario esta activo en la  baes de datos 
-        if(!usuario.estado){
+        if (!usuario.estado) {
             return res.status(400).json({
                 msg: "Usuarios / Password son incorrectos estado false"
             })
@@ -25,7 +25,7 @@ const login = async(req, res = response) => {
 
         //verificar la contraseña -> sdesencriptar 
         const validPassword = bcryptjs.compareSync(password, usuario.password); //bollean 
-        if(!validPassword){
+        if (!validPassword) {
             return res.status(400).json({
                 msg: "Usuarios / Password son incorrectos - password"
             })
@@ -34,15 +34,15 @@ const login = async(req, res = response) => {
         //generar el json web token
 
         const token = await generarJWT(usuario.id); //funciona con callbacks
-        
-    
+
+
         //si todo esta correcto 
         return res.json({
-        
-           usuario,
-           token
 
-           
+            usuario,
+            token
+
+
         })
 
     } catch (error) {
@@ -50,9 +50,22 @@ const login = async(req, res = response) => {
         res.status(500).json({
             ok: "Hable con el administrador"
         });
+
     }
-    
+
+
+}
+
+const googleSignin = (req, res = response) => {
+    //toquen enviado por el body
+    const {id_token}= req.body;
+
+    res.json({
+        msg: "Todo bien, google sing in ",
+        id_token
+    });
 }
 module.exports = {
-    login
+    login,
+    googleSignin
 }

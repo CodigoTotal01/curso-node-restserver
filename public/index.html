@@ -1,10 +1,91 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Acceso denegado</title>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!--    cargar biblioteca -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://unpkg.com/jwt-decode/build/jwt-decode.js"></script>
+
+    <!--    funciones para lo importante -->
+    <script>
+        <!--        aqui se nos da toda linformacion del registro de la cuenta de google -->
+
+        var url = (window.location.hostname.includes('localhost')) ? 'http://localhost:8080/api/auth/google' : 'http://localhostheroku:4200/api/auth/google'
+
+        console.log(url)
+
+        function handleCredentialResponse(response) {
+            // decodeJwtResponse() is a custom function defined by you
+            // to decode the credential response.
+            // la respuesta como tal es el token
+
+            const responsePayload = jwt_decode(response.credential); //decodificado
+            console.log("ID: " + responsePayload.sub);
+            console.log('Full Name: ' + responsePayload.name);
+            console.log('Given Name: ' + responsePayload.given_name);
+            console.log('Family Name: ' + responsePayload.family_name);
+            console.log("Image URL: " + responsePayload.picture);
+            console.log("Email: " + responsePayload.email);
+
+            let id_token = response.credential;  // sin codificar
+
+            const data = {id_token}
+
+
+            fetch(url, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            }).then(resp => resp.json())
+                .then(data => console.log("Nuestra server ", data))
+                .catch(console.log)
+
+
+        }
+
+        window.onload = function () {
+
+            // COnfiguracion de nuestro login
+            google.accounts.id.initialize({
+                client_id: "586158528528-hqa6g1rle5m0ihg73fn7nq8uq3089l31.apps.googleusercontent.com",
+                callback: handleCredentialResponse
+            });
+
+
+            //renderizado del boton
+            google.accounts.id.renderButton(
+                document.getElementById("buttonDiv"),
+                {
+                    theme: "filled_black",
+                    size: "large",
+                    type: "standard",
+                    shape: "pill",
+                    locale: "es-PE",
+                    logo_alignment: "left"
+                }  // customization attributes
+            );
+            google.accounts.id.prompt(); // also display the One Tap dialog
+        }
+
+        //? para salir
+        function logout() {
+            google.accounts.id.disableAutoSelect();
+            alert("no funciona ");
+        }
+    </script>
+
+    <title>Google Sing</title>
 </head>
 <body>
-    <h1>Acceso denegado</h1>
+
+<div id="buttonDiv"></div>
+
+<a href="#" onclick="logout()">Guías</a>
+
+
 </body>
 </html>
