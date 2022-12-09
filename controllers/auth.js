@@ -2,6 +2,7 @@ const {response} = require("express");
 const Usuario = require('../models/usuario') // entity > mongoose
 const bcryptjs = require('bcryptjs');
 const {generarJWT} = require("../helpers/generar-jwt");
+const {googleVerify} = require("../helpers/google-verify");
 
 //modelo 
 const login = async (req, res = response) => {
@@ -56,14 +57,49 @@ const login = async (req, res = response) => {
 
 }
 
-const googleSignin = (req, res = response) => {
+const googleSignin = async (req, res = response) => {
     //toquen enviado por el body
     const {id_token}= req.body;
+    try {
+    const {correo, img, nombre} = await googleVerify(id_token); //viene com oundefine si ta cagaoo
 
-    res.json({
-        msg: "Todo bien, google sing in ",
-        id_token
-    });
+        let usuario = await Usuario.findOne({correo}); // ecista o no exista (first time )
+
+        if(!usuario){ ///crear usuario
+            const data = {
+                nombre,
+                correo,
+                password: 'xd', // nadie se autenticara con esto
+                img,
+                google: true
+            };
+
+            usuario = new Usuario(data); //generar usuario con los datos de la autenticacion
+            await usuario.save(); //guardar
+        }
+
+        //el usuario esta negado en nuestra BD
+        if(! usuario.estado){ // si es falso
+            return res.status(401).json({
+                msg: "Hable con el administrados, usted no tiene acceso"
+            })
+        }
+
+        //generar JWT
+        const token = await generarJWT(usuario.id); //funciona con callbacks
+
+
+        res.json({
+            usuario,
+            token
+        });
+    }catch (error){
+        res.status(400).json({
+            msg: "Token de google no es valido"
+        })
+    }
+
+
 }
 module.exports = {
     login,

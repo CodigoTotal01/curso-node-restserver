@@ -7,8 +7,13 @@ class Server{
     constructor() {
         this.app = express()
         this.port = process.env.PORT;
-        this.usuariosRoutePath ="/api/usuarios"
-        this.authPath = "/api/auth"
+
+
+        this.paths = {
+            auth: '/api/auth',
+            usuarios: '/api/usuarios',
+            categorias: '/api/categorias'
+        }
 
         //conneccion con la base de datos
         this.conectarDB();
@@ -37,8 +42,10 @@ class Server{
 
     routes(){
         //pero mira el path sera como la ruta inicial, fijate en el nombre que se concatena con las nuevas rutas 
-        this.app.use(this.authPath, require('../routes/auth')); 
-        this.app.use(this.usuariosRoutePath, require('../routes/usuarios'));
+        this.app.use(this.paths.auth, require('../routes/auth')); 
+        this.app.use(this.paths.usuarios, require('../routes/usuarios'));
+        //ruta -> categorias 
+        this.app.use(this.paths.categorias, require('../routes/categorias'));
        
     }
 

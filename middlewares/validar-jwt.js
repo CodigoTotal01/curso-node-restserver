@@ -9,7 +9,7 @@ const Usuario = require('../models/usuario') // entity > mongoose
 //losmiiddleware reciven el req, res de la peticion 
 const validarJWT = async(req = request, res = response, next) => {
     //header re, prams-en el enlace, body req
-    const token = req.header('x-token'); //leer header, iniicdica el nombre
+    const token = req.header('x-token'); //! token debe ser siempre enviado por el header -> leer header, iniicdica el nombre
 
     if (!token) {
         return res.status(401).json({
@@ -39,7 +39,7 @@ const validarJWT = async(req = request, res = response, next) => {
 
 
         //lo pasamos como referencia hasya el controllador de esta forma 
-        req.usuario = usuario;
+        req.usuario = usuario; //! Aqui pasamos al usuario -> empleado para la categoria -> set data 
 
         next(); //para que continue con lo que sigue 
     } catch (error) {
