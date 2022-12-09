@@ -30,4 +30,11 @@
  });
 
 //model -> para setear el nombre de la entidad y poder emplear todos los metodos del Schema
+
+CategoriaSchema.methods.toJSON = function() {
+    const { __v, ...usuario  } = this.toObject();
+    return usuario; 
+}
+
+
 module.exports = model('Categoria', CategoriaSchema);

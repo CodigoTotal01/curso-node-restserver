@@ -48,7 +48,8 @@ const obtenerCategorias = async(req = request, res = response) => {
 
     const [categorias, total] = await Promise.all(
         [
-            Categoria.find(query).skip(parseInt(desde)).limit(parseInt(limite)), //categorias
+            Categoria.find(query).populate('usuario', 'nombre') // basicamente populate se encarga de tomar el id de un 
+            .skip(parseInt(desde)).limit(parseInt(limite)), //categorias
             Categoria.countDocuments() // contiene la cantidad de categorias, todas
         ]
     );
@@ -81,10 +82,14 @@ const obtenerCategoriaPorId = async(req = request, res = response) =>  {
 const actualizarCategoria = async(req = request, res = response) => {
     const {id} = req.params;
 
-    const {_id, nombre, usuario, ...resto } = req.body; //formato json -> lo enviamos 
+    const {estado, usuario, ...data } = req.body; //formato json -> lo enviamos 
 
+    data.nombre = data.nombre.toUpperCase();
+    data.usuario = req.usuario._id;
+    console.log(data)
 
-    const categoria = await Categoria.findByIdAndUpdate(id,  {nombre, usuario})
+    console.log(data) 
+    const categoria = await Categoria.findByIdAndUpdate(id,  data, {new: true})
 
 
     res.json({
@@ -101,7 +106,7 @@ const borrarCategoria = async(req = request, res = response) => {
 
         const usuarioAutenticado = req.usuario; // solo para conmpraibar que el usuario a sido comprobado atravez del tokej }
 
-        const categoria = await Categoria.findByIdAndUpdate(id, {estado: false});
+        const categoria = await Categoria.findByIdAndUpdate(id, {estado: false}, {new: true});
 
         res.status(201).json({
             usuarioAutenticado,
