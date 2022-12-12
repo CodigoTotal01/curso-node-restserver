@@ -10,15 +10,15 @@ router.post('/login',
     check('password', 'La contraseña es obligatoria').not().isEmpty(), // nunca debemos mostrar si la contraseña esta mal
     validarCampos //! envia los mensajes de errores -> middleware personalizado
 ]
-, login );
+, login ); 
 
 router.post('/google',
     [
         check('id_token', 'El id_token es necesario').not().isEmpty(),
         validarCampos
     ]
-    , googleSignin ); //aqui va el controlador
+    , googleSignin   ); //aqui va el controlador
 
-
+//
 
 module.exports = router;
