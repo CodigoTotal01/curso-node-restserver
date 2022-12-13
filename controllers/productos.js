@@ -1,4 +1,6 @@
 const { response, request } = require("express");
+const categoria = require("../models/categoria");
+const Categoria = require("../models/categoria");
 
 const Producto = require("../models/producto");
 
@@ -28,9 +30,15 @@ const obtenerProductos = async (req = request, res = response) => {
     })
 }
 
+const obtenerProducto = async (req = request, res = response) => {
+    const {id} = req.params;
+    const producto = await Producto.findById(id).populate('usuario', 'nombre');
+    res.json(producto)
+}
+
 // producto 
 const crearProducto = async (req = request, res = response) => {
-    const { precio, categoria, descripcion } = req.body;
+    const { estado, usuario, ...body } = req.body;
     const nombre = req.body.nombre.toUpperCase();
 
     //preguntando si ya existe elprocudto 
@@ -40,7 +48,7 @@ const crearProducto = async (req = request, res = response) => {
     if (productoDB) {
         return res.status(400).json(
             {
-                msg: `La Productos ${productoDB.nombre}, ya esta registrado ❤`
+                msg: `El producto  ${productoDB.nombre}, ya esta registrado ❤`
             }
         )
     }
@@ -49,11 +57,10 @@ const crearProducto = async (req = request, res = response) => {
 
     const data = {
         nombre,
-        usuario: req.usuario._id,
-        precio,
-        categoria, //categoria id 
-        descripcion,
+        ...body,
+        usuario: req.usuario._id
     }
+    console.log(data.usuario)
 
     console.log("la data generada de los productos: " + data);
 
@@ -67,9 +74,11 @@ const crearProducto = async (req = request, res = response) => {
 
 const actualizarProducto = async (req = request, res = response) => {       
     const {id} = req.params;
-    const {estado, disponible, ...data} = req.body;
-    
-    data.nombre = data.nombre.toUpperCase();
+    const {estado, usuario, ...data} = req.body;
+    if(data.nombre){
+        data.nombre = data.nombre.toUpperCase();
+    }
+   
 
     data.usuario= req.usuario._id; // asi se guarda en mongo db 
 
@@ -97,7 +106,6 @@ const borrarProducto =  async (req = request, res = response) => {
     const producto = await Producto.findByIdAndUpdate(id, {estado: false}, {new: true});
 
     res.status(201).json({
-        usuarioAutenticado,
         producto
     })
     
@@ -105,6 +113,7 @@ const borrarProducto =  async (req = request, res = response) => {
 
 module.exports = {
     obtenerProductos,
+    obtenerProducto,
     crearProducto,
     actualizarProducto,
     borrarProducto
