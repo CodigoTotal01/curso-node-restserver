@@ -2,6 +2,7 @@ const express = require('express')
 require('dotenv').config(); //dotenv
 var cors = require('cors');
 const { dbConnection } = require('../database/config');
+const fileUpload = require('express-fileupload');
 
 class Server {
     constructor() {
@@ -14,7 +15,8 @@ class Server {
             usuarios: '/api/usuarios',
             categorias: '/api/categorias',
             productos: '/api/productos',
-            buscar: '/api/buscar'
+            buscar: '/api/buscar',
+            uploads: '/api/uploads'
         }
 
         //conneccion con la base de datos
@@ -29,7 +31,7 @@ class Server {
         await dbConnection();
     }
 
-    middlewares() {
+    middlewares() { //! primero se ejecuta  todo esto antes de psar a las rutas 
         //cors
         this.app.use(express.static('public')); //! prioridad
         this.app.use(cors());
@@ -39,6 +41,13 @@ class Server {
 
         //paralabra clase para indicar que es un middleware
 
+
+            //File-Upload-cargar de manera global 
+            this.app.use(fileUpload({
+                useTempFiles : true,
+                tempFileDir : '/tmp/',
+                createParentPath: true
+            }));
 
     }
 
@@ -51,7 +60,7 @@ class Server {
         //ruta -> productos
         this.app.use(this.paths.productos, require('../routes/producto'));
         this.app.use(this.paths.buscar, require('../routes/buscar'));
-
+        this.app.use(this.paths.uploads, require('../routes/uploads'));
 
     }
 
