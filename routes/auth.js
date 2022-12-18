@@ -1,7 +1,7 @@
 const { Router } = require('express'); //isntacncia de rutas
 const { check } = require('express-validator');
-const { login, googleSignin} = require('../controllers/auth');
-const { validarCampos } = require('../middlewares/validar-campos');
+const { login, googleSignin, renovarToken} = require('../controllers/auth');
+const {  validarJWT, validarCampos } = require('../middlewares');
 const router = Router(); //a el se le configura las rutas 
 //el segundo argumento es un middleware _> son funciones que se ejecutan antesque un controlador
 router.post('/login', 
@@ -20,5 +20,8 @@ router.post('/google',
     , googleSignin   ); //aqui va el controlador
 
 //
+
+
+router.get('/', validarJWT, renovarToken);
 
 module.exports = router;

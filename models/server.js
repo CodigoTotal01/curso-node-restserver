@@ -3,12 +3,21 @@ require('dotenv').config(); //dotenv
 var cors = require('cors');
 const { dbConnection } = require('../database/config');
 const fileUpload = require('express-fileupload');
+const {createServer} =  require('http');
+const { socketController } = require('../sockets/controller');
 
 class Server {
     constructor() {
-        this.app = express()
+        this.app = express() //aplciacion de expres como tal 
         this.port = process.env.PORT;
+        this.server = createServer(this.app) //servidor apartir de la aplciacion de exrpress 
 
+        //! servidor de sockets backent server 
+        this.io  = require('socket.io')(this.server);
+
+
+
+        // io -> es el soket server -> que emplea neustro servidor de express 
 
         this.paths = {
             auth: '/api/auth',
@@ -25,6 +34,8 @@ class Server {
         this.middlewares();
 
         this.routes(); // para que cargue las rutas al iniciar
+
+        this.sockets();
     }
 
     async conectarDB() {
@@ -64,8 +75,16 @@ class Server {
 
     }
 
+    //configuracion de manejo de sockets  o cliente 
+    sockets(){
+        //servidor de sockets -> io
+        this.io.on('connection', (socket) => socketController(socket, this.io)); //se le pasa el socket al conectarce un cliente -> o se le pasa el cliente
+    }
+
     listen() {
-        this.app.listen(this.port, () => {
+            //el servidor de expres no (app) -> si no el servidor de sockets
+
+        this.server.listen(this.port, () => {
             console.log('Servidor corriendo');
         })
     }
