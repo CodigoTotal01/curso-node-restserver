@@ -9,10 +9,6 @@ cloudinary.config(process.env.CLOUDINARY_URL);
 
 const cargarArchivo = async (req, res = response) => {
 
-    //! no olvidar conculstar en el erquest (siembre biene el cuerpo del body)
-
-    // console.log('req.files >>>', req.files); // todos los archivos enviados
-
     try {
         //! configurar en el servidor para que se generen carpetas automaticamente 
         const nombre = await subirArchivo(req.files, undefined, 'imgs'); //botenemos el arreglo de archivos, pero nos puede dar error con el rejet 

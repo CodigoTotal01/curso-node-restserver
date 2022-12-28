@@ -2,10 +2,10 @@ const { response } = require('express');
 const Categoria = require('../models/categoria');
 const Producto = require('../models/producto');
 const Role = require('../models/roles');
-const Usuario = require('../models/usuario') // entity > mongoose
+const Usuario = require('../models/usuario')
 
 
-const esRoleValido = async (rol= '') => { // valor por defecto si no viene 
+const esRoleValido = async (rol= '') => { 
     const existeRol = await Role.findOne({rol}); //buscar si existe el rol , retorna null si no lo halla 
     if(!existeRol){
         throw new Error(`El rol " ${rol}" no esta registrado`); // error personalizado para  que no rebiente
@@ -58,7 +58,7 @@ const coleccionesPermitidas = ( coleccion = '', colecciones = []) => {
         throw new Error(`La colección ${ coleccion } no es permitida, ${ colecciones }`);
     }
 
-    return true; //implicito aen cada unos de estos metodos
+    return true; //implicito en cada uno de estos metodos
 }
 
 module.exports ={

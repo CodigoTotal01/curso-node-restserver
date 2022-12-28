@@ -104,7 +104,7 @@ const borrarCategoria = async(req = request, res = response) => {
     //obtener id del prametro 
         const {id} = req.params;
 
-        const usuarioAutenticado = req.usuario; // solo para conmpraibar que el usuario a sido comprobado atravez del tokej }
+        const usuarioAutenticado = req.usuario; // solo para comprobar que el usuario a sido comprobado atravez del token
 
         const categoria = await Categoria.findByIdAndUpdate(id, {estado: false}, {new: true});
 

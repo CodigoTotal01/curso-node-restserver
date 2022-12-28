@@ -7,7 +7,7 @@ const generarJWT = (uid='') => { //unico a almacenar -> nada sencible guardar
     //retornar promesa 
     return new Promise((resolve, reject)=> {
         const payload = {uid}; //se necesrita que se envie como objeto 
-        //llavae cecreata -> muy nuestro 
+ 
         jwt.sign(payload, process.env.SECRETORPRIVATEKEY,{
             expiresIn: '4h', //tiempo de vida 
         }, (err, token)=>{ // informacion que nosretornara el generar el token

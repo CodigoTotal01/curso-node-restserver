@@ -30,7 +30,7 @@ const buscarUsuarios = async (termino = '', res = response) => {
         $and: [{estado: true}]
     }
         
-    ); //buqueda por nombre y no por id -> literal laso le pass solo una parte del contenid oy no le interesa si es mayucula o minuscula
+    ); //buqueda por nombre y no por id -> literal laso le pass solo una parte del contenido y no le interesa si es mayucula o minuscula
     
     return res.json({ //retornara un null, porque ahora n oirve null porque eso sigue siendo un elmentos :0
         result: (usuarios)? [usuarios] : [] 
@@ -88,9 +88,9 @@ const buscarProductos = async (termino = '', res = response) => {
         $and: [{estado: true}]
     }
         
-    ).populate('categoria', 'nombre'); //buqueda por nombre y no por id -> literal laso le pass solo una parte del contenid oy no le interesa si es mayucula o minuscula
+    ).populate('categoria', 'nombre'); 
     
-    return res.json({ //retornara un null, porque ahora n oirve null porque eso sigue siendo un elmentos :0
+    return res.json({ //retornara un null, porque ahora no sirve null porque eso sigue siendo un elmentos :0
         result: (productos)? [productos] : [] 
     })
 }

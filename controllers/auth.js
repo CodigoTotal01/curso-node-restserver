@@ -17,14 +17,14 @@ const login = async (req, res = response) => {
                 msg: "Usuarios / Password son incorrectos"
             })
         }
-        //Si el usuario esta activo en la  baes de datos 
+        //Si el usuario esta activo en la base de datos 
         if (!usuario.estado) {
             return res.status(400).json({
                 msg: "Usuarios / Password son incorrectos estado false"
             })
         }
 
-        //verificar la contraseña -> sdesencriptar 
+        //verificar la contraseña -> desencriptar 
         const validPassword = bcryptjs.compareSync(password, usuario.password); //bollean 
         if (!validPassword) {
             return res.status(400).json({
@@ -37,7 +37,7 @@ const login = async (req, res = response) => {
         const token = await generarJWT(usuario.id); //funciona con callbacks
 
 
-        //si todo esta correcto 
+       
         return res.json({
 
             usuario,
@@ -61,7 +61,7 @@ const googleSignin = async (req, res = response) => {
     //toquen enviado por el body
     const {id_token}= req.body;
     try {
-    const {correo, img, nombre} = await googleVerify(id_token); //viene com oundefine si ta cagaoo
+    const {correo, img, nombre} = await googleVerify(id_token); //viene un undefine
 
         let usuario = await Usuario.findOne({correo}); // ecista o no exista (first time )
 

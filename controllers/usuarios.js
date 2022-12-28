@@ -1,11 +1,10 @@
 //solo para controladores -< crear funciones 
 //!en los controlllers -> base de datos 
-const { response, request } = require("express") //para tener la informacion del atribuyto response 
-const Usuario = require('../models/usuario') // entity > mongoose
-const bcryptjs = require('bcryptjs') // para encriptar contraseñas
+const { response, request } = require("express")
+const Usuario = require('../models/usuario')
+const bcryptjs = require('bcryptjs') 
 
 //obtener los errores dgenerleles del middleware
-
 const usuariosGet = async (req = request, res = response) => {
     //res.send('Hello World') html
     const { limite = 5, desde = 0 } = req.query; //todo lo que biene es un string

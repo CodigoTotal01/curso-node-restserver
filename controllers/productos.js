@@ -91,13 +91,7 @@ const actualizarProducto = async (req = request, res = response) => {
 
 }
 
-
-//exportar los metoods que maejan los controladores
-
-
 //eliminar cambiar el estado
-
-
 const borrarProducto =  async (req = request, res = response) => {  
     const {id} = req.params;
     const usuarioAutenticado= req.usuario; //jwt

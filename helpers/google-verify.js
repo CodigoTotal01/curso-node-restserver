@@ -1,5 +1,5 @@
 const {OAuth2Client} = require('google-auth-library');
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID); //! añadir tu cliente ->
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID); //! añadir tu cliente 
 //verifica si es tun token valido
 const googleVerify =  async (idToken = '') =>  {
     const ticket = await client.verifyIdToken({
